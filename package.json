@@ -1,0 +1,32 @@
+{
+  "name": "node007",
+  "version": "1.0.0",
+  "description": "Node JS Practice project create by aniket",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aniketji007/node007.git"
+  },
+  "keywords": [
+    "node",
+    "aniket",
+    "mfsstore",
+    "foodking1011",
+    "node007"
+  ],
+  "author": "aniketji007",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aniketji007/node007/issues"
+  },
+  "homepage": "https://github.com/Aniketji007/node007#readme",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
