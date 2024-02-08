@@ -1,58 +1,75 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
-const extraData = process.argv;
-const rootFolder = path.join(__dirname, 'test');
+const app = express();
+const publicFolder = path.join(__dirname, '/public');
+const port = 3000;
 
+// // Staticaly page loaded
+// // Ex: http://localhost:3000, http://localhost:3000/blog.html, http://localhost:3000/about.html
+// app.use(express.static(publicFolder));
 
-switch (extraData[2]) {
-    case 'add':
-        fs.writeFileSync(`${rootFolder}/${extraData[3]}`, extraData[4]);
-        console.log('File Added');
-        break;
-    case 'delete':
-        fs.unlink(`${rootFolder}/${extraData[3]}`, (err) => {
-            const message = !err ? 'File Delted Success Fully' : 'something error: ' + err;
-            console.log(message);
-        });
-        break;
-    case 'list':
-        fs.readdir(`${rootFolder}`, (err, items) => {
-            if (err) {
-                console.log('Something Error: ' + err);
-            } else {
-                items.map(item => {
-                    console.log(item);
-                });
-            }
-        });
-        break;
-    case 'read':
-        fs.readFile(`${rootFolder}/${extraData[3]}`, 'utf8', (err, data) => {
-            if (err) {
-                console.log('Something Error: ' + err);
-            } else {
-                console.log(data);
-            }
-        })
-        break;
-    case 'update':
-        fs.appendFileSync(`${rootFolder}/${extraData[3]}`, extraData[4], (err) => {
-            const message = !err ? 'File Update Success Fully' : 'something error: ' + err;
-            console.log(message);
-        });
-        break;
-    case 'rename':
-        fs.rename(`${rootFolder}/${extraData[3]}`, `${rootFolder}/${extraData[4]}`, (err) => {
-            const message = !err ? 'File Renamed Success Fully' : 'something error: ' + err;
-            console.log(message);
-        })
-        break;
-}
+app.get('', (_, res) => {
+    res.sendFile(`${publicFolder}/index.html`);
+});
 
-http.createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    const data={test: 5000};
-    res.write(JSON.stringify(data));
-    res.end();
-}).listen(3000);
+app.get('/about', (_, res) => {
+    res.sendFile(`${publicFolder}/about.html`);
+});
+
+app.get('/blog', (_, res) => {
+    res.sendFile(`${publicFolder}/blog.html`);
+});
+
+// Render Html Content
+app.get('*', (_,res)=> {
+    res.send(`
+        <style>
+        form{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1rem;
+            border: 1px solid #00000005;
+            box-shadow: 2px 2px 5px #00000069;
+            border-radius: 1rem;
+            color: violet;
+            font-family: arial;
+        }
+        form :where(label, input){
+            display: block;
+            margin-block: .5rem;
+        }
+
+        form input{
+            border-color: violet;
+            outline-color: violet;
+            color: violet;
+        }
+
+        form div{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        </style>
+        <form action="/blog" method="post">
+        <h1>Testing Form</h1>
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter Username or Email" name="username"/>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter Username or Email" name="password"/>
+        <div>
+            <input type="submit" value="Submit"/>
+            <input type="reset" value="Reset"/>
+        </div>
+        </form>`
+    );
+});
+
+app.post('*', (_,res)=>{
+    res.send('<style>h1{display: inline-block;} a{color: red; font-size: 1.5rem; margin-left: 1rem;}</style><h1>Click Here to :</h1><a href="/form">Go Back To Form</a>');
+});
+
+app.listen(port, () => {
+    console.log(`Server running on ${port} port http://localhost:3000`);
+})
